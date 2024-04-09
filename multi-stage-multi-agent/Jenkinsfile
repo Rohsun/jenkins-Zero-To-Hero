@@ -6,7 +6,21 @@ pipeline {
         docker { image 'maven:3.8.1-adoptopenjdk-11' }
       }
       steps {
-        sh 'mvn --version'
+        sh 'mvn --version' // Verify Maven version
+        script {
+          // Write a simple Java program
+          writeFile file: 'HelloWorld.java', text: '''
+            public class HelloWorld {
+              public static void main(String[] args) {
+                System.out.println("Hello, World!");
+              }
+            }
+          '''
+          // Compile the Java program using Maven
+          sh 'mvn compile'
+          // Execute the compiled Java program
+          sh 'java -cp target/classes HelloWorld'
+        }
       }
     }
     stage('Front-end') {
@@ -15,7 +29,11 @@ pipeline {
       }
       steps {
         sh 'node --version'
+        sh 'echo "Hello, World!"'
       }
     }
   }
 }
+
+}
+
